@@ -64,9 +64,4 @@ class FoodItem{
       FoodItem(id: '15', name: "Spaghetti", category: 'Pasta', imgURL: 'https://static.vecteezy.com/system/resources/previews/025/065/195/original/spaghetti-with-ai-generated-free-png.png', price: 9.99, Size: "Medium",Calories: "80 Kcal",Cooking: "10-15 Mins", description:"Spaghetti bolognese consists of spaghetti (long strings of pasta) with an Italian ragù (meat sauce) made with minced beef, bacon and tomatoes, served with Parmesan cheese."),
       FoodItem(id: '16', name: "Filet Mignon", category: 'Beef', imgURL: 'https://i.pinimg.com/originals/3c/b2/6e/3cb26eb0b32e52171c70c89b3eefc8c5.png', price: 11.99, Size: "large",Calories: "200 Kcal",Cooking: "15-20 Mins", description:"Filet Mignon, cut thin and topped with sautéed mushrooms, bacon & melted mozzarella cheese. Sorry, No Temperature."),
       FoodItem(id: '17', name: "T-bone", category: 'Beef', imgURL: 'https://pnghq.com/wp-content/uploads/download-steak-plate-png-88034.png', price: 14.99, Size: "large",Calories: "200 Kcal",Cooking: "15-20 Mins", description:"Juicy beef with the bone cut from the loin"),
-    
-    
-    
-
-      
     ];

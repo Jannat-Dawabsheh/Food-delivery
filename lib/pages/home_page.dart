@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:food_delivery/models/category_item.dart';
 import 'package:food_delivery/models/food_item.dart';
 import 'package:food_delivery/pages/products_details_page.dart';
+import 'package:food_delivery/utils/app_routes.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,7 +24,9 @@ class _HomePageState extends State<HomePage> {
   }
   @override
   Widget build(BuildContext context) {
-
+  final _formKey=GlobalKey<FormState>();
+  final _searchController=TextEditingController();
+    final size=MediaQuery.of(context).size;
     return SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -94,32 +98,40 @@ class _HomePageState extends State<HomePage> {
                   child: Image.network(
                     
                     'https://img.freepik.com/premium-vector/free-vector-luxury-food-social-media-promotion-banner-post-design-illustration_745688-149.jpg',
-                     height: 180,
-                     width: 400,
-                     fit: BoxFit.cover,
+                     height: size.width>800?size.height*0.45: size.height*0.2,
+                     width: double.infinity,
+                     fit: BoxFit.fill,
                   ),
                 ),
                 const SizedBox(height: 16.0,),
-                TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search, color: Colors.grey,),
-                    hintText:'Find your food ...',
-                    hintStyle: const TextStyle(
-                      color: Colors.grey,
+                 Form(
+                  key: _formKey,
+                   child: TextFormField(
+                    controller: _searchController,
+                    validator: (value)=>value!=null&&value.isNotEmpty?null:'Please enter any keyword to search for!',
+                    decoration: InputDecoration(
+                      suffixIcon:  IconButton(
+                        icon: const Icon(Icons.search, color: Colors.grey),
+                        onPressed: (){_formKey.currentState!.validate()?Navigator.pushNamed(context, AppRoutes.search, arguments: _searchController.text ) :null;debugPrint(_searchController.text);} 
+                        ),
+                      hintText:'Find your food ...',
+                      hintStyle: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                      
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none,
+                        ),
                     ),
                     
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide.none,
-                      ),
-                  ),
-                  
-                ),
+                                   ),
+                 ),
                 const SizedBox(height: 25.0,),
                   SizedBox(
-                  height: 100,
+                  height: size.height*0.15,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: Categories.length,
@@ -179,84 +191,95 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height:25.0),
                 GridView.builder(
-                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
+                   gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: size.width>1100? 5: size.width>800 ? 4:  2,
                       mainAxisSpacing: 18,
                       crossAxisSpacing: 18,
                       ),
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: filteredFood.length,
-                      itemBuilder: (context,index)=>InkWell(
-                        onTap: (){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ProductDetailsPage(foodItem: filteredFood[index],))).then((value) => 
-                          setState(() {
-                            if(SelectedIndex!=null){
-                            final selectedCategory=Categories[SelectedIndex!];
-                            filteredFood=products.where((element) => element.category==selectedCategory.name).toList();
-                          }}));
-                        },
-                        child: Container(
-                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16.0),
-                           ),
-                           child: Stack(
-                            alignment: AlignmentDirectional.center,
-                             children: [
-                               Column(
-                                children: [
-                                  const SizedBox(height:5.0),
-                                  Image.network(filteredFood[index].imgURL,
-                                  height: 70,
-                                  width: 80,
-                                 
-                                  ),
-                                  Text(
-                                    filteredFood[index].name,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    
-                                  ),
-                                  Text(
-                                    filteredFood[index].category,
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                    ),
-                                    const SizedBox(height: 4.0,),
-                                  Text(
-                                    '\$${filteredFood[index].price}',
-                                    style:const TextStyle(
-                                      color:Color.fromARGB(231, 194, 44, 134),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    ),
-                                ],
-                               ),
+                      itemBuilder: (context,index)=>
+
+                         LayoutBuilder(
+                           builder: (context, Constraints) {
+                             return InkWell(
+                              onTap: (){
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ProductDetailsPage(foodItem: filteredFood[index],))).then((value) => 
+                                setState(() {
+                                  if(SelectedIndex!=null){
+                                  final selectedCategory=Categories[SelectedIndex!];
+                                  filteredFood=products.where((element) => element.category==selectedCategory.name).toList();
+                                }}));
+                              },
+                              child: Container(
+                                 decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16.0),
+                                 ),
+                                 child: Padding(
+                                   padding: const EdgeInsets.symmetric(vertical:6.0),
+                                   child: Stack(
+                                    alignment: AlignmentDirectional.center,
+                                     children: [
+                                       Column(
+                                        children: [
+                                          const SizedBox(height:5.0),
+                                          Image.network(filteredFood[index].imgURL,
+                                          height: Constraints.maxHeight*0.5,
+                                          width: Constraints.maxWidth*0.4,
+                                         
+                                          ),
+                                          Text(
+                                            filteredFood[index].name,
+                                            style: TextStyle(
+                                              fontSize: Constraints.maxHeight*0.09,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            
+                                          ),
+                                          Text(
+                                            filteredFood[index].category,
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                            ),
+                                            ),
+                                            const SizedBox(height: 4.0,),
+                                          Text(
+                                            '\$${filteredFood[index].price}',
+                                            style:TextStyle(
+                                              color:Color.fromARGB(231, 194, 44, 134),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: Constraints.maxHeight*0.07,
+                                            ),
+                                            ),
+                                        ],
+                                       ),
+                                                         
+                                       PositionedDirectional(
+                                        top: 0,
+                                        end: 0,
+                                         child: IconButton(
+                                          onPressed: (){
+                                            setState(() {
+                                              filteredFood[index]=filteredFood[index].copyWith(isFavorite: !filteredFood[index].isFavorite);
+                                              final SelectedFoodItem=products.firstWhere((element) => element.id==filteredFood[index].id);
+                                              final SelectedFoodIndex=products.indexOf(SelectedFoodItem);
+                                              products[SelectedFoodIndex]=filteredFood[index];
+                                            });
+                                          }, 
+                                          icon:Icon(filteredFood[index].isFavorite==false?  Icons.favorite_border:Icons.favorite),
+                                          color:const  Color.fromARGB(179, 175, 9, 95),
+                                          ),
+                                       ),
+                                     ],
+                                   ),
+                                 ),
+                              ),
+                        );
+                           }
+                         ),
                       
-                               PositionedDirectional(
-                                top: 0,
-                                end: 0,
-                                 child: IconButton(
-                                  onPressed: (){
-                                    setState(() {
-                                      filteredFood[index]=filteredFood[index].copyWith(isFavorite: !filteredFood[index].isFavorite);
-                                      final SelectedFoodItem=products.firstWhere((element) => element.id==filteredFood[index].id);
-                                      final SelectedFoodIndex=products.indexOf(SelectedFoodItem);
-                                      products[SelectedFoodIndex]=filteredFood[index];
-                                    });
-                                  }, 
-                                  icon:Icon(filteredFood[index].isFavorite==false?  Icons.favorite_border:Icons.favorite),
-                                  color:const  Color.fromARGB(179, 175, 9, 95),
-                                  ),
-                               ),
-                             ],
-                           ),
-                        ),
-                      ),
                 ),
         
               ],

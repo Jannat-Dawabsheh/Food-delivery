@@ -30,6 +30,7 @@ void _increaseQuantity(){
 
   @override
   Widget build(BuildContext context) {
+    final size=MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -168,13 +169,14 @@ void _increaseQuantity(){
                     ),
               ),
             ),
-             const SizedBox(height: 8,),
+             SizedBox(height: size.height>800? size.height*0.1: 8,),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal:24.0),
+              padding:  EdgeInsets.symmetric(horizontal:24.0 , vertical:size.width>800? 24.0: 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
+                    flex: size.width>800? 3: 2,
                     child: Text(
                       " \$ ${(widget.foodItem.price * quantity).toStringAsFixed(2)}",
                       style: const TextStyle(
@@ -185,17 +187,21 @@ void _increaseQuantity(){
                       ),
                   ),
                     Expanded(
-                      child: ElevatedButton(
-                        onPressed: (){}, 
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(231, 194, 44, 134),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          )
-                        ),
-                        child: const Text("Checkout"),
-                        ),
+                      flex:1,
+                      child: SizedBox(
+                        height: size.height*0.05,
+                        child: ElevatedButton(
+                          onPressed: (){}, 
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromARGB(231, 194, 44, 134),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            )
+                          ),
+                          child: const Text("Checkout"),
+                          ),
+                      ),
                     ),
                 ],
               ),

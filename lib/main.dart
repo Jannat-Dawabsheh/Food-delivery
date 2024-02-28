@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/pages/home_page.dart';
 import 'package:food_delivery/pages/custom_bottom_navbar.dart';
+import 'package:food_delivery/utils/app_router.dart';
+import 'package:food_delivery/utils/app_routes.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -19,7 +21,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(106, 239, 165, 203)),
         useMaterial3: true,
       ),
-      home: CustomNavbar(),
+      initialRoute: AppRoutes.home,
+      onGenerateRoute: AppRouter.onGenerateRoute,
     );
   }
 }

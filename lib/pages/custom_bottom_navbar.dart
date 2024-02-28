@@ -26,10 +26,11 @@ class _CustomNavbarState extends State<CustomNavbar> {
   
   @override
   Widget build(BuildContext context) {
+    final size=MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: widgetBuilder[selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: size.width>800? null:  BottomNavigationBar(
        currentIndex: selectedIndex,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home,), label: 'Home', ),
